@@ -8,3 +8,8 @@ find_package(catkin REQUIRED COMPONENTS
 
 catkin_python_setup()
 catkin_package()
+
+install(PROGRAMS
+  scripts/generator.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
