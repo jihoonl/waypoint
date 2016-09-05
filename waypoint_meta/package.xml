@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>waypoint_meta</name>
-  <version>0.0.0</version>
+  <version>0.0.1</version>
   <description>Waypoint Meta package</description>
 
   <maintainer email="jihoonlee.in@gmail.com">Jihoon Lee</maintainer>
