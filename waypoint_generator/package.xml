@@ -1,20 +1,25 @@
 <?xml version="1.0"?>
-<package>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
   <name>waypoint_generator</name>
   <version>0.0.1</version>
   <description>Generates waypoint yaml file</description>
 
   <maintainer email="jihoonlee.in@gmail.com">Jihoon Lee</maintainer>
+  <license>propreitary</license>
 
-  <license>BSD</license>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>rclpy</exec_depend>
 
-  <url type="website">http://wiki.ros.org/waypoint_generator</url>
-  <url type="bugtracker">https://github.com/jihoonl/waypoint/issues</url>
-  <url type="repository">https://github.com/jihoonl/waypoint</url>
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
 
-  <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>geometry_msgs</build_depend>
-  <build_depend>rospy</build_depend>
-  <run_depend>geometry_msgs</run_depend>
-  <run_depend>rospy</run_depend>
+
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+
 </package>
