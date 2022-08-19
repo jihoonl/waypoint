@@ -32,7 +32,8 @@ def create_navigate_to_pose_goal(p, stamp):
     target.header.frame_id = p['frame_id']
     target.header.stamp = stamp
     target.pose = create_geo_pose(p)
-    goal = NavigateToPose(target)
+
+    goal = NavigateToPose.Goal(pose=target)
     return goal
 
 

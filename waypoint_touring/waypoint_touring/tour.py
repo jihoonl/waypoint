@@ -26,11 +26,11 @@ class TourMachine(Node):
         repeat = self.get_parameter('repeat').value
         random_visits = self.get_parameter('random_visits').value
 
-        action_name = 'navigate_to'
+        action_name = '/navigation/navigate_to_pose'
         self._ac_move_base = ActionClient(self, nav2_actions.NavigateToPose,
                                           action_name)
         self.get_logger().info('Wait for %s server' % action_name)
-        #self._ac_move_base.wait_for_server()
+        self._ac_move_base.wait_for_server()
 
         # Load waypoints from yaml file
         self._waypoints = utils.get_waypoints(filename)
@@ -59,15 +59,16 @@ class TourMachine(Node):
     def move_to_next(self):
         p = self._get_next_destination()
         if not p:
-            self.get_logger().info("Finishing Tour")
+            self.get_logger().info('Finishing Tour')
             return True
 
-        goal = utils.create_navigate_to_pose_goal(p, self.get_clock().now())
-        self.get_logger().info("Move to %s" % p['name'])
-        self._ac_move_base.send_goal(goal)
-        self._ac_move_base.wait_for_result()
-        result = self._ac_move_base.get_result()
-        rospy.loginfo("Result : %s" % result)
+        goal = utils.create_navigate_to_pose_goal(
+            p,
+            self.get_clock().now().to_msg())
+        self.get_logger().info('Move to %s' % p['name'])
+        response = self._ac_move_base.send_goal(goal)
+        #self._ac_move_baese.wait_for_result()
+        self.get_logger().info('Response: %s' % response.status)
 
         return False
 
@@ -78,23 +79,21 @@ class TourMachine(Node):
                 if self._random_visits:
                     random.shuffle(self._waypoints)
             else:
-                next_destination = None
+                return None
         next_destination = self._waypoints[self._counter]
         self._counter = self._counter + 1
-        return next_destieation
+        return next_destination
 
     def spin(self):
-        print('here')
         rate = self.create_rate(1)
-        print('here2')
         rate.sleep()
         # Publish visualization markers before string a tour
-        print('here3')
         self._pub_viz_marker.publish(self._viz_markers)
+        print('Num Waypoints: ', len(self._waypoints))
         finished = False
         try:
             while rclpy.ok() and not finished:
-                #finished = self.move_to_next()
+                finished = self.move_to_next()
                 rate.sleep()
         except KeyboardInterrupt:
             pass
@@ -105,13 +104,12 @@ def main(args=None):
 
     m = TourMachine()
     # Spin in a separate thread
-    thread = threading.Thread(target=rclpy.spin, args=(m, ), daemon=True)
+    thread = threading.Thread(target=rclpy.spin, args=(m,), daemon=True)
     thread.start()
 
     m.spin()
     rclpy.shutdown()
     thread.join()
-
 
 
 if __name__ == '__main__':
